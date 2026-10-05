@@ -6,26 +6,6 @@ Acting as a real-time **driving instructor for your hands**, SignFlow tracks han
 
 ---
 
-## Key Numbers & Specifications
-
-| Metric | Value | Description |
-| :--- | :--- | :--- |
-| **Supported Signs** | **33 classes** | 9 digits (`1–9`) + 24 static alphabet letters (`A–Y`, excluding dynamic signs `J` & `Z`) |
-| **Dataset Size** | **25,946 samples** | Benchmark BIM landmark dataset (`landmarks.csv`) |
-| **Dataset Splits** | **20,848 / 2,526 / 2,572** | Train (80.4%), Validation (9.7%), and Test (9.9%) splits |
-| **In-Browser Model** | **4,950 vectors** | 150 curated prototype vectors per sign in `model.json` (6.4 MB) |
-| **Feature Dimensions** | **63 coordinates** | 21 hand landmarks × 3 spatial axes ($x, y, z$) |
-| **Classifier** | **k-NN ($k = 5$)** | Sub-millisecond cosine & Euclidean distance classification in WebAssembly/JS |
-| **Tracking Pipeline** | **21 3D landmarks** | Real-time palm and finger joint extraction via MediaPipe Vision Bundle |
-| **Frame Rate** | **Up to 60 FPS** | Zero-latency client-side tracking running entirely in the browser |
-| **Hold-to-Master** | **~1,000 ms** | Required continuous correct hold duration before sign registers as mastered |
-| **AI Coach Latency** | **< 400 ms** | Fast natural-language feedback via Groq LPUs (`qwen/qwen3.8-27b` / `llama-3.3-70b-versatile`) |
-| **Coaching Cooldown** | **4,000 ms** | Rate-limiting interval to prevent cognitive fatigue and coaching spam |
-| **Curriculum Scope** | **7 structured levels** | Progressive learning groups (5 signs per level) |
-| **User Privacy** | **100% Client-Side** | Zero video frames sent to servers; progress saved in local `localStorage` |
-
----
-
 ## The Problem
 
 Malaysian Sign Language (BIM) learners frequently practice alone between classes without access to a certified instructor. Without real-time corrections:
@@ -214,6 +194,25 @@ Generates real-time targeted coaching tips.
 
 ---
 
+
+## Key Numbers & Specifications
+
+| Metric | Value | Description |
+| :--- | :--- | :--- |
+| **Supported Signs** | **33 classes** | 9 digits (`1–9`) + 24 static alphabet letters (`A–Y`, excluding dynamic signs `J` & `Z`) |
+| **Dataset Size** | **25,946 samples** | Benchmark BIM landmark dataset (`landmarks.csv`) |
+| **Dataset Splits** | **20,848 / 2,526 / 2,572** | Train (80.4%), Validation (9.7%), and Test (9.9%) splits |
+| **In-Browser Model** | **4,950 vectors** | 150 curated prototype vectors per sign in `model.json` (6.4 MB) |
+| **Feature Dimensions** | **63 coordinates** | 21 hand landmarks × 3 spatial axes ($x, y, z$) |
+| **Classifier** | **k-NN ($k = 5$)** | Sub-millisecond cosine & Euclidean distance classification in WebAssembly/JS |
+| **Tracking Pipeline** | **21 3D landmarks** | Real-time palm and finger joint extraction via MediaPipe Vision Bundle |
+| **Frame Rate** | **Up to 60 FPS** | Zero-latency client-side tracking running entirely in the browser |
+| **Hold-to-Master** | **~1,000 ms** | Required continuous correct hold duration before sign registers as mastered |
+| **AI Coach Latency** | **< 400 ms** | Fast natural-language feedback via Groq LPUs (`qwen/qwen3.8-27b` / `llama-3.3-70b-versatile`) |
+| **Coaching Cooldown** | **4,000 ms** | Rate-limiting interval to prevent cognitive fatigue and coaching spam |
+| **Curriculum Scope** | **7 structured levels** | Progressive learning groups (5 signs per level) |
+| **User Privacy** | **100% Client-Side** | Zero video frames sent to servers; progress saved in local `localStorage` |
+---
 ## License
 
 MIT License. Designed with ❤️ for the Malaysian Deaf & Hard-of-Hearing community.
