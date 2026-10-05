@@ -1,0 +1,13 @@
+# Environment variables (sensitive API keys)
+.env
+.env.local
+*.env
+
+# Dependencies
+node_modules/
+
+# Logs & temp
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db

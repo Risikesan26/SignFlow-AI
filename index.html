@@ -1,0 +1,2461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SignFlow – BIM Sign Coach (Malaysian Sign Language)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap">
+
+<style>
+:root {
+  /* Clean, warm, human-crafted white palette */
+  --bg: #F8FAF9;
+  --surface: #FFFFFF;
+  --surface-subtle: #F1F5F3;
+  --surface-hover: #EAEFEA;
+  --ink: #131E29;
+  --ink-secondary: #475569;
+  --muted: #64748B;
+  --line: #E2E8F0;
+  --line-strong: #CBD5E1;
+
+  /* Fresh Malaysian teal brand accent */
+  --accent: #0D9488;
+  --accent-light: #CCFBF1;
+  --accent-hover: #0F766E;
+  --accent-ink: #FFFFFF;
+
+  /* Friendly semantic feedback */
+  --ok: #16A34A;
+  --ok-bg: #DCFCE7;
+  --oktext: #15803D;
+  --ok-border: #86EFAC;
+
+  --warn: #D97706;
+  --warn-bg: #FEF3C7;
+  --warntext: #B45309;
+
+  --bad: #DC2626;
+  --bad-bg: #FEE2E2;
+  --badtext: #B91C1C;
+  --bad-border: #FCA5A5;
+
+  --info: #F0FDF4;
+  --info-border: #BBF7D0;
+  --stage: #0F172A;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+
+  --shadow-sm: 0 1px 3px rgba(19, 30, 41, 0.04);
+  --shadow-card: 0 2px 10px -2px rgba(19, 30, 41, 0.05), 0 1px 3px rgba(19, 30, 41, 0.03);
+  --shadow-card-hover: 0 8px 24px -4px rgba(19, 30, 41, 0.08), 0 2px 6px -1px rgba(19, 30, 41, 0.03);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 15px/1.55 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Page Container */
+.wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Header */
+header {
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-weight: 800;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: -0.4px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo-badge {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #0D9488, #14B8A6);
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.25);
+}
+
+.logo-badge svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.logo small {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 2px 8px;
+  border-radius: 999px;
+  letter-spacing: 0.3px;
+  border: 1px solid #99F6E4;
+}
+
+/* Navigation tabs */
+nav {
+  display: flex;
+  gap: 4px;
+  background: var(--surface-subtle);
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+}
+
+nav button {
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--muted);
+  transition: all 0.18s ease;
+}
+
+nav button:hover {
+  color: var(--ink);
+}
+
+nav button[aria-selected="true"] {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Streak Pill */
+.streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--warntext);
+  background: var(--warn-bg);
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid #FDE68A;
+}
+
+.streak svg {
+  width: 15px;
+  height: 15px;
+  fill: #F59E0B;
+}
+
+.streak b {
+  color: #78350F;
+}
+
+/* Main */
+main {
+  padding: 10px 0 16px;
+}
+
+section[hidden] {
+  display: none;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  margin-bottom: 6px;
+}
+
+.lead {
+  color: var(--ink-secondary);
+  font-size: 15px;
+  max-width: 65ch;
+  margin: 6px 0 24px;
+  line-height: 1.55;
+}
+
+/* ==========================================================
+   LEARN TAB
+   ========================================================== */
+.level {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 20px 22px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.level:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+.level.locked {
+  opacity: 0.6;
+  background: #FAFCFA;
+}
+
+.lh {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.lh h2 {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.lh span {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.chips {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  border: 2px solid var(--line);
+  background: var(--surface-subtle);
+  font: 800 20px 'Plus Jakarta Sans', system-ui, sans-serif;
+  color: var(--ink);
+  position: relative;
+  display: grid;
+  place-items: center;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chip:hover:not([disabled]) {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 4px 10px rgba(13, 148, 136, 0.15);
+}
+
+.chip.mastered {
+  border-color: var(--ok-border);
+  background: var(--ok-bg);
+  color: var(--oktext);
+}
+
+.chip.learning {
+  border-color: var(--warn);
+  border-style: dashed;
+  background: var(--warn-bg);
+  color: var(--warntext);
+}
+
+.chip.tricky::after {
+  content: "!";
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--bad);
+  color: #fff;
+  font: 800 11px/18px 'Plus Jakarta Sans', sans-serif;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
+}
+
+.legend {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 14px;
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* CTA Buttons */
+.cta {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 0;
+  border-radius: 12px;
+  padding: 11px 22px;
+  font-weight: 700;
+  font-size: 14.5px;
+  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.25);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.18s ease;
+}
+
+.cta:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.35);
+}
+
+.cta:active {
+  transform: translateY(1px);
+}
+
+.ghost {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  color: var(--ink-secondary);
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-weight: 600;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.18s ease;
+}
+
+.ghost:hover {
+  border-color: var(--line-strong);
+  color: var(--ink);
+  background: var(--surface-subtle);
+}
+
+.ghost.active {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent-hover);
+}
+
+/* ==========================================================
+   PRACTICE TAB
+   ========================================================== */
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+@media(max-width: 840px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+.stage {
+  background: var(--stage);
+  border-radius: var(--radius-lg);
+  aspect-ratio: 16 / 10;
+  max-height: 48vh;
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-card);
+}
+
+.stage video,
+.stage canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.stage video {
+  transform: scaleX(-1);
+}
+
+.guide {
+  position: absolute;
+  inset: 8% 22%;
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  pointer-events: none;
+  z-index: 6;
+  transition: border-color 0.25s ease;
+}
+
+.guide.locked {
+  border-color: #4ADE80;
+  border-style: solid;
+  box-shadow: inset 0 0 25px rgba(74, 222, 128, 0.15);
+}
+
+/* Idle Camera Overlay */
+.idle-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #94A3B8;
+  z-index: 4;
+  text-align: center;
+  padding: 20px;
+  pointer-events: none;
+}
+
+.idle-overlay svg {
+  width: 36px;
+  height: 36px;
+  stroke: #64748B;
+  stroke-width: 1.8;
+}
+
+.idle-overlay p {
+  font-size: 13px;
+  max-width: 28ch;
+  line-height: 1.4;
+  color: #CBD5E1;
+}
+
+.tag {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(8px);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #E2E8F0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tag-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.tag.mock {
+  left: auto;
+  right: 14px;
+  background: rgba(245, 158, 11, 0.2);
+  color: #FCD34D;
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+.status {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(180deg, transparent 0%, rgba(15, 23, 42, 0.95) 100%);
+  z-index: 8;
+}
+
+.ring {
+  width: 46px;
+  height: 46px;
+  flex: none;
+  transform: rotate(-90deg);
+}
+
+.ring circle {
+  fill: none;
+  stroke-width: 4.5;
+}
+
+.ring .t {
+  stroke: rgba(255, 255, 255, 0.2);
+}
+
+.ring .p {
+  stroke: #14B8A6;
+  stroke-linecap: round;
+  stroke-dasharray: 113;
+  stroke-dashoffset: 113;
+  transition: stroke-dashoffset 0.08s linear;
+}
+
+.status strong {
+  font-size: 16px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Right Panel */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: var(--shadow-card);
+  height: 100%;
+}
+
+/* ==========================================================
+   TARGET HAND POSE CARD (Collapsible & Compact)
+   ========================================================== */
+.target-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.target-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.target-title-row h2 {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.target-title-row .sub {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.big {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--ink);
+  color: var(--surface);
+  display: grid;
+  place-items: center;
+  font: 800 26px 'Plus Jakarta Sans', system-ui, sans-serif;
+  flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(19, 30, 41, 0.12);
+}
+
+.target-cues {
+  flex: 1;
+}
+
+.target-cues p.recipe {
+  margin: 3px 0 0;
+  color: var(--accent-hover);
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1.35;
+  background: var(--accent-light);
+  padding: 2px 7px;
+  border-radius: 6px;
+  display: inline-block;
+  border: 1px solid rgba(13, 148, 136, 0.2);
+}
+
+.target-card {
+  background: #0B132B;
+  border: 1px solid #1E293B;
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 4px 18px -4px rgba(11, 19, 43, 0.35);
+  color: #F8FAFC;
+  transition: all 0.2s ease;
+  flex: 1;
+  min-height: 0;
+}
+
+details.target-card:not([open]) {
+  flex: 0 0 auto;
+}
+
+details.target-card summary {
+  list-style: none;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+}
+
+details.target-card summary::-webkit-details-marker,
+details.target-card summary::marker {
+  display: none;
+}
+
+.target-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tch-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tch-caret {
+  display: inline-block;
+  transition: transform 0.2s ease;
+  font-size: 11px;
+  color: #94A3B8;
+  font-weight: 700;
+}
+
+details.target-card:not([open]) .tch-caret {
+  transform: rotate(-90deg);
+}
+
+.tch-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  color: #F1F5F9;
+}
+
+.tch-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(13, 148, 136, 0.22);
+  color: #2DD4BF;
+  border: 1px solid rgba(45, 212, 191, 0.35);
+}
+
+.view-pill {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: #1E293B;
+  color: #CBD5E1;
+  border: 1px solid #334155;
+  transition: all 0.16s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.view-pill:hover {
+  color: #FFFFFF;
+  border-color: #64748B;
+  background: #334155;
+}
+
+.view-pill.active {
+  background: rgba(13, 148, 136, 0.28);
+  color: #2DD4BF;
+  border-color: #0D9488;
+}
+
+.target-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 2px;
+  flex: 1;
+  min-height: 0;
+}
+
+.target-stage {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 220px;
+  background: radial-gradient(circle at 50% 50%, #162447 0%, #0B132B 85%);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  place-items: center;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.target-stage canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.finger-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.fl-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #94A3B8;
+}
+
+.fl-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.tag.ghost-mode-tag {
+  left: 14px;
+  top: 48px;
+  background: rgba(13, 148, 136, 0.35);
+  color: #CCFBF1;
+  border-color: rgba(45, 212, 191, 0.45);
+}
+
+/* ==========================================================
+   FINGER CHECK (Compact 5-Dot Row & Inline Issue Chips)
+   ========================================================== */
+.finger-check-box {
+  background: var(--surface-subtle);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.fc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fc-title-group {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.fc-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.2px;
+}
+
+.fc-hint-text {
+  font-size: 10px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.fc-status-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  border: 1px solid var(--line);
+  transition: all 0.2s ease;
+}
+
+.fc-status-badge.ok {
+  background: var(--ok-bg);
+  color: var(--oktext);
+  border-color: var(--ok-border);
+}
+
+.fc-status-badge.bad {
+  background: var(--bad-bg);
+  color: var(--badtext);
+  border-color: var(--bad-border);
+}
+
+.fc-dots-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 2px 0;
+}
+
+.fc-dot {
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.fc-dot.na {
+  background: #E2E8F0;
+  color: #64748B;
+  border: 1.5px solid #CBD5E1;
+}
+
+.fc-dot.ok {
+  background: #10B981;
+  color: #FFFFFF;
+  border: 1.5px solid #059669;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.35);
+}
+
+.fc-dot.bad {
+  background: #EF4444;
+  color: #FFFFFF;
+  border: 1.5px solid #DC2626;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.45);
+  animation: pulse-dot 1.2s infinite ease-in-out;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.fc-issues {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding-top: 5px;
+  border-top: 1px dashed var(--line);
+}
+
+.fc-issue-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--bad-bg);
+  border: 1px solid var(--bad-border);
+  border-radius: 6px;
+  padding: 2px 7px;
+  font-size: 11px;
+}
+
+.fc-issue-finger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  color: var(--badtext);
+}
+
+.fc-issue-tag {
+  font-weight: 700;
+  font-size: 10.5px;
+  color: #DC2626;
+  background: rgba(239, 68, 68, 0.12);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.fc-more-count {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+
+/* Friendly Coach Card */
+.coach {
+  background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 100%);
+  border: 1px solid var(--info-border);
+  border-radius: var(--radius-md);
+  padding: 10px 13px;
+  font-size: 13px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 10px;
+  box-shadow: 0 2px 8px rgba(19, 30, 41, 0.04);
+}
+
+.coach-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: all 0.25s ease;
+}
+
+.coach-avatar.thinking {
+  animation: pulse-avatar 0.9s infinite alternate ease-in-out;
+  box-shadow: 0 0 12px rgba(13, 148, 136, 0.55);
+}
+
+@keyframes pulse-avatar {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.14); }
+}
+
+.coach-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.coach-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.coach-header-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.coach-header-left b {
+  font-size: 11px;
+  color: var(--accent-hover);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.coach-ai-badge {
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(13, 148, 136, 0.14);
+  color: var(--accent-hover);
+  border: 1px solid rgba(13, 148, 136, 0.28);
+  transition: all 0.2s ease;
+}
+
+.coach-ai-badge.loading {
+  background: #FEF3C7;
+  color: #B45309;
+  border-color: #FDE68A;
+  animation: pulse-badge 1s infinite;
+}
+
+.coach-ai-badge.fresh {
+  background: #DCFCE7;
+  color: #15803D;
+  border-color: #86EFAC;
+}
+
+@keyframes pulse-badge {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.btn-ask-coach {
+  background: #FFFFFF;
+  border: 1px solid var(--accent);
+  color: var(--accent-hover);
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.16s ease;
+  box-shadow: 0 1px 3px rgba(13, 148, 136, 0.12);
+}
+
+.btn-ask-coach:hover {
+  background: var(--accent);
+  color: #FFFFFF;
+  transform: translateY(-1px);
+}
+
+.btn-ask-coach:active {
+  transform: translateY(0);
+}
+
+.coach-body span {
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+/* ==========================================================
+   PROGRESS TAB
+   ========================================================= */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.stat b {
+  display: block;
+  font: 800 32px 'Plus Jakarta Sans', system-ui, sans-serif;
+  letter-spacing: -0.5px;
+}
+
+.stat span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.bars {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 22px 24px;
+  display: grid;
+  gap: 12px;
+  box-shadow: var(--shadow-card);
+}
+
+.br {
+  display: grid;
+  grid-template-columns: 32px 1fr 48px;
+  gap: 14px;
+  align-items: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.br div {
+  height: 10px;
+  background: var(--surface-subtle);
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.br div i {
+  display: block;
+  height: 100%;
+  background: var(--ok);
+  border-radius: 5px;
+  transition: width 0.4s ease;
+}
+
+.br.low div i {
+  background: var(--bad);
+}
+
+.br small {
+  color: var(--muted);
+  text-align: right;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+
+.err {
+  color: var(--badtext);
+  font-weight: 600;
+  padding: 12px 16px;
+  background: var(--bad-bg);
+  border-radius: 10px;
+  border: 1px solid var(--bad-border);
+}
+
+@media(prefers-reduced-motion: reduce) {
+  .ring .p { transition: none; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <a href="#" class="logo" onclick="show('learn'); return false;">
+      <div class="logo-badge">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm0-8h-2V7h2v2zm5 8h-2V7h2v10z"/></svg>
+      </div>
+      <span>SignFlow</span>
+      <small>BIM · 🇲🇾</small>
+    </a>
+    <nav role="tablist" aria-label="Sections">
+      <button role="tab" aria-selected="true" data-t="learn">Learn</button>
+      <button role="tab" aria-selected="false" data-t="practice">Practice</button>
+      <button role="tab" aria-selected="false" data-t="progress">Progress</button>
+    </nav>
+    <div class="streak">
+      <svg viewBox="0 0 24 24"><path d="M12 23c-4.97 0-9-4.03-9-9 0-4.3 3.01-7.9 7-8.8V3c0-.55.45-1 1-1s1 .45 1 1v2.2c3.99.9 7 4.5 7 8.8 0 4.97-4.03 9-9 9zm0-15.5c-3.59 0-6.5 2.91-6.5 6.5s2.91 6.5 6.5 6.5 6.5-2.91 6.5-6.5-2.91-6.5-6.5-6.5z"/></svg>
+      <span><b id="stk">0</b> day streak</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- LEARN SECTION -->
+  <section id="learn">
+    <h1>Practice Malaysian Sign Language</h1>
+    <p class="lead">Built for families, friends, and learners connecting with the Deaf community in Malaysia. Learn BIM fingerspelling through real-time AI guidance.</p>
+    <div id="levels"><p class="lead">Loading signs from model…</p></div>
+    <div class="legend">
+      <span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok)"></i> Solid green: mastered</span>
+      <span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--warn)"></i> Dashed yellow: learning</span>
+      <span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--bad)"></i> Red !: often missed</span>
+    </div>
+    <p style="margin-top:24px"><button class="cta" id="cont">Continue practising →</button></p>
+  </section>
+
+  <!-- PRACTICE SECTION -->
+  <section id="practice" hidden>
+    <div class="grid">
+      <div>
+        <div class="stage" aria-label="Camera view with hand skeleton">
+          <!-- Video & Canvas -->
+          <video id="cam" playsinline muted></video>
+          <canvas id="cv"></canvas>
+
+          <!-- Idle Viewport Indicator -->
+          <div class="idle-overlay" id="idle-msg">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            <p>Webcam is off. Match the <strong>Ghost Hand silhouette</strong> and press <strong>"Start camera"</strong>.</p>
+          </div>
+
+          <div class="guide" id="guide-box"></div>
+          <span class="tag">
+            <span class="tag-dot"></span>
+            Keep hand inside box
+          </span>
+          <span class="tag ghost-mode-tag" id="ghost-tag">👻 Stencil: In Box</span>
+          <span class="tag mock" id="cs">Camera off</span>
+
+
+          <!-- Bottom Ring & Status -->
+          <div class="status">
+            <svg class="ring" viewBox="0 0 46 46">
+              <circle class="t" cx="23" cy="23" r="18"/>
+              <circle class="p" id="ring" cx="23" cy="23" r="18"/>
+            </svg>
+            <strong id="stat">Press “Start camera”</strong>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:14px">
+          <button class="cta" id="start">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            Start camera
+          </button>
+          <button class="ghost" id="show-me-btn" title="Peek target ghost hand pose at 25% opacity">
+            👁️ Show me
+          </button>
+          <button class="ghost" id="skip">Next sign →</button>
+        </div>
+
+        <!-- Coach under camera in left column: hand -> message -->
+        <div class="coach" id="coach-card" aria-live="polite">
+          <div class="coach-avatar" id="coach-avatar">🇲🇾</div>
+          <div class="coach-body">
+            <div class="coach-header">
+              <div class="coach-header-left">
+                <b>Cikgu AI</b>
+                <span class="coach-ai-badge" id="coach-ai-badge">✨ AI Active</span>
+              </div>
+              <button type="button" class="btn-ask-coach" id="ask-coach-btn" title="Ask Cikgu AI for instant tips and posture corrections">
+                ✨ Ask Cikgu
+              </button>
+            </div>
+            <span id="tip">Place your hand in the box and match the ghost outline.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Panel: Target and Compact Finger Check -->
+      <aside class="panel">
+        <div class="target-header">
+          <div class="big" id="tl">–</div>
+          <div class="target-cues">
+            <div class="target-title-row">
+              <h2 id="th">Sign</h2>
+              <span class="sub" id="tsub">Sign 1 of 33</span>
+            </div>
+            <p class="recipe" id="tcue">☝️ Match the ghost silhouette</p>
+          </div>
+        </div>
+
+        <!-- Compact & Collapsible Target Pose Card -->
+        <details class="target-card" id="ref-box" open>
+          <summary class="target-card-header">
+            <div class="tch-left">
+              <span class="tch-caret">▾</span>
+              <span class="tch-title">🎯 Target Pose</span>
+              <span class="tch-badge" id="ref-orient-badge" style="display:none">Point Down 👇</span>
+            </div>
+            <div class="tch-controls">
+              <button type="button" class="view-pill active" id="ref-mirror-btn" title="Toggle between Mirrored (webcam match) and Teacher (frontal) view">
+                🪞 Mirrored View
+              </button>
+            </div>
+          </summary>
+
+          <div class="target-card-body">
+            <div class="target-stage">
+              <canvas id="ref-cv" width="480" height="280"></canvas>
+            </div>
+          </div>
+        </details>
+
+        <!-- Compact Finger Check: Single Row of 5 Dots -->
+        <div class="finger-check-box">
+          <div class="fc-header">
+            <span class="fc-title">Finger check</span>
+            <span class="fc-status-badge" id="fc-overall-status">Ready</span>
+          </div>
+
+          <div class="fc-dots-row">
+            <span class="fc-dot na" id="fcdot-thumb" title="Thumb (T)">T</span>
+            <span class="fc-dot na" id="fcdot-index" title="Index (I)">I</span>
+            <span class="fc-dot na" id="fcdot-middle" title="Middle (M)">M</span>
+            <span class="fc-dot na" id="fcdot-ring" title="Ring (R)">R</span>
+            <span class="fc-dot na" id="fcdot-pinky" title="Pinky (P)">P</span>
+          </div>
+
+          <!-- Issues list: only rendered when something is wrong -->
+          <div class="fc-issues" id="fc-issues" style="display:none"></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- PROGRESS SECTION -->
+  <section id="progress" hidden>
+    <h1>Your progress</h1>
+    <p class="lead">Saved on this device. Signs you miss are prioritized for practice.</p>
+    <div class="stats">
+      <div class="stat"><b id="s1">0</b><span>signs mastered</span></div>
+      <div class="stat"><b id="s2">–</b><span>overall accuracy</span></div>
+      <div class="stat"><b id="s3">0 days</b><span>current streak</span></div>
+      <div class="stat"><b id="s4" style="color:var(--badtext);">–</b><span>need more practice</span></div>
+    </div>
+    <div class="bars" id="bars"></div>
+  </section>
+</main>
+
+<script type="module">
+import {HandLandmarker,FilesetResolver} from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const COACH_URL="/api/coach"; // Calls Cikgu AI with Groq backend via /api/coach
+const FING={thumb:[1,2,3,4],index:[5,6,7,8],middle:[9,10,11,12],ring:[13,14,15,16],pinky:[17,18,19,20]};
+const NAME={thumb:"Thumb",index:"Index finger",middle:"Middle finger",ring:"Ring finger",pinky:"Little finger"};
+const cam=$("#cam");
+let M,cl=[],tpl={},cur=0,lmk,run=false,hs=0,done=false,present=false,gone=0,lastT=-1,lastKey="",tipAt=0,P={},S={};
+let ghostMode = 'box'; // 'box' (stencil in guide box), 'follow' (on hand with EMA), 'off'
+let showGhost = true;
+let refMirror = true; // true = mirrored webcam match, false = teacher frontal
+let lastGhostPoints = null;
+let smoothAnchor = null;
+
+/* Clear placement recipes for Malaysian Sign Language */
+const CUES = {
+  '1': '☝️ Index points straight up, curl other fingers to thumb.',
+  '2': '✌️ Index and middle fingers extended up in a V shape.',
+  '3': '🤟 Thumb, index, and middle extended; ring and pinky curled.',
+  '4': '✋ Four flat fingers straight up, thumb tucked across palm.',
+  '5': '🖐️ All five fingers spread wide open.',
+  '6': '👌 Touch thumb and pinky together, other three fingers upright.',
+  '7': '👌 Touch thumb and ring finger together, other fingers upright.',
+  '8': '👌 Touch thumb and middle finger together, other fingers upright.',
+  '9': '👌 Touch thumb and index finger together, other fingers upright.',
+  'A': '✊ Tight fist with thumb resting upright along index side.',
+  'B': '✋ Four flat fingers held upright together, thumb across palm.',
+  'C': '🤏 Curve all fingers and thumb into a C cup shape.',
+  'D': '☝️ Index points straight up, thumb meets other three curled fingers.',
+  'E': '✊ All fingertips curled down, thumb tucked beneath them.',
+  'F': '👌 Index and thumb touch in a ring, other three fingers up.',
+  'G': '👉 Index points forward horizontally, thumb parallel.',
+  'H': '👉 Index and middle fingers point forward together.',
+  'I': '🤙 Tight fist with only your little pinky pointing up.',
+  'K': '✌️ Index up, middle points forward, thumb resting between.',
+  'L': '👆 Index up and thumb out forming a 90° right angle.',
+  'M': '✊ Three fingers folded over the tucked thumb.',
+  'N': '✊ Two fingers folded over the tucked thumb.',
+  'O': '👌 All fingers and thumb curve together to form an O.',
+  'P': '👇 Like K pointing downward towards floor.',
+  'Q': '👇 Like G pointing downward.',
+  'R': '🤞 Index and middle fingers crossed over each other.',
+  'S': '✊ Tight fist with thumb crossed over the front of fingers.',
+  'T': '✊ Thumb tucked between index and middle fingers in a fist.',
+  'U': '✌️ Index and middle fingers held straight up and touching.',
+  'V': '✌️ Index and middle fingers held up spread apart.',
+  'W': '🖖 Index, middle, and ring fingers spread up like a W.',
+  'X': '☝️ Index finger bent like a hook, other fingers curled.',
+  'Y': '🤙 Thumb and pinky extended out, middle three curled.'
+};
+
+try{P=JSON.parse(localStorage.sfP||"{}");S=JSON.parse(localStorage.sfS||"{}")}catch(e){}
+const save=()=>{try{localStorage.sfP=JSON.stringify(P);localStorage.sfS=JSON.stringify(S)}catch(e){}};
+const acc=s=>P[s]&&P[s].a?P[s].c/P[s].a:0;
+const state=s=>{const p=P[s];if(!p||!p.a)return"";if(p.a>=3&&p.c/p.a<.5)return"learning tricky";return p.c>=2&&p.c/p.a>=.6?"mastered":"learning"};
+
+/* maths */
+const dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]);
+const unflat=f=>Array.from({length:21},(_,i)=>f.slice(i*3,i*3+3));
+function norm(lm){const w=lm[0],p=lm.map(q=>[q.x-w.x,q.y-w.y,q.z-w.z]),s=Math.hypot(...p[9])||1;return p.map(q=>q.map(v=>v/s))} // same as training
+const ext=(p,f)=>f==="thumb"?dist(p[4],p[5]):dist(p[FING[f][3]],p[0])/dist(p[FING[f][0]],p[0]);
+function knn(v){const d=[];for(let i=0;i<M.samples.length;i++){const s=M.samples[i];let t=0;for(let j=0;j<63;j++){const e=s[j]-v[j];t+=e*e}d.push([t,i])}
+ d.sort((a,b)=>a[0]-b[0]);const w={};let tot=0;
+ for(const [t,i] of d.slice(0,M.k)){const l=M.labels[i],u=1/(Math.sqrt(t)+1e-3);w[l]=(w[l]||0)+u;tot+=u}
+ const b=Object.keys(w).sort((a,c)=>w[c]-w[a])[0];return[b,w[b]/tot]}
+
+const FING_COLS = {
+  thumb: { bone: "#F59E0B", joint: "#FCD34D", text: "T", name: "Thumb" },
+  index: { bone: "#10B981", joint: "#6EE7B7", text: "I", name: "Index" },
+  middle: { bone: "#06B6D4", joint: "#67E8F9", text: "M", name: "Middle" },
+  ring: { bone: "#818CF8", joint: "#C7D2FE", text: "R", name: "Ring" },
+  pinky: { bone: "#F43F5E", joint: "#FDA4AF", text: "P", name: "Pinky" }
+};
+
+/* Helper: Draw high-visibility rounded pill badge on canvas */
+function drawCanvasBadge(x, text, cx, cy, bgCol, borderCol, textCol, fontSize = 11) {
+  x.save();
+  x.font = `700 ${fontSize}px 'Plus Jakarta Sans', system-ui, sans-serif`;
+  const textW = x.measureText(text).width;
+  const padW = 12;
+  const w = textW + padW;
+  const h = fontSize + 8;
+  const rx = cx - w / 2;
+  const ry = cy - h / 2;
+
+  x.fillStyle = bgCol || "rgba(15, 23, 42, 0.92)";
+  x.strokeStyle = borderCol || "rgba(255, 255, 255, 0.3)";
+  x.lineWidth = 1.2;
+  x.beginPath();
+  x.roundRect(rx, ry, w, h, 6);
+  x.fill();
+  x.stroke();
+
+  x.fillStyle = textCol || "#FFFFFF";
+  x.textAlign = "center";
+  x.textBaseline = "middle";
+  x.fillText(text, cx, cy + 0.5);
+  x.restore();
+}
+
+let samplesBySign = {};
+
+/* Compare against the nearest real sample of the target sign */
+function getNearestTargetSample(s, v) {
+  const list = samplesBySign[s];
+  if (!list || list.length === 0) return tpl[s]?.avgLm || null;
+  let bestDist = Infinity;
+  let bestLm = list[0].lm;
+  for (let i = 0; i < list.length; i++) {
+    const sample = list[i].flat;
+    let sumSq = 0;
+    for (let j = 0; j < 63; j++) {
+      const diff = sample[j] - v[j];
+      sumSq += diff * diff;
+    }
+    if (sumSq < bestDist) {
+      bestDist = sumSq;
+      bestLm = list[i].lm;
+    }
+  }
+  return bestLm;
+}
+
+function evaluateFingersAgainstTarget(p, tLm, s) {
+  const errors = {};
+  const labels = {};
+  const diffs = {};
+
+  for (const f in FING) {
+    const ids = FING[f];
+    const tipId = ids[3];
+
+    // 1. 3D distance of fingertip to nearest target sample fingertip
+    const tipDist = dist(p[tipId], tLm[tipId]);
+    
+    // 2. Average distance across all joints of this finger
+    let jointDist = 0;
+    for (let i = 0; i < ids.length; i++) {
+      jointDist += dist(p[ids[i]], tLm[ids[i]]);
+    }
+    jointDist /= ids.length;
+
+    // 3. Extension comparison against target sample
+    const uExt = ext(p, f);
+    const tExt = ext(tLm, f);
+    const extDiff = uExt - tExt;
+    diffs[f] = extDiff;
+
+    // Error metric: fingertip distance + joint position
+    errors[f] = tipDist * 2.0 + jointDist * 1.0;
+
+    // Detailed diagnostic label
+    if (f === "thumb") {
+      if (extDiff > 0.14) {
+        labels[f] = "Tuck in";
+      } else if (extDiff < -0.14) {
+        labels[f] = "Open out";
+      } else if (tipDist > 0.28) {
+        labels[f] = p[4][0] > tLm[4][0] ? "Tuck in" : "Open out";
+      } else {
+        labels[f] = "Adjust thumb";
+      }
+    } else {
+      if (extDiff < -0.20) {
+        labels[f] = "Too curled";
+      } else if (extDiff > 0.20) {
+        labels[f] = "Too straight";
+      } else {
+        // Finger curl is roughly close, check spread / abduction against middle finger
+        const uSpread = dist(p[tipId], p[12]);
+        const tSpread = dist(tLm[tipId], tLm[12]);
+        if (uSpread > tSpread + 0.14) {
+          labels[f] = "Bring closer";
+        } else {
+          labels[f] = extDiff < 0 ? "Too curled" : "Too straight";
+        }
+      }
+    }
+  }
+
+  return { errors, labels, diffs };
+}
+
+/* Build templates and compute average 21 landmarks + explicit target posture per finger */
+function buildTpl(){
+  samplesBySign = {};
+  M.samples.forEach((s, i) => {
+    const lbl = M.labels[i];
+    if (!samplesBySign[lbl]) samplesBySign[lbl] = [];
+    samplesBySign[lbl].push({ flat: s, lm: unflat(s) });
+  });
+
+  const A={};
+  M.samples.forEach((s,i)=>{(A[M.labels[i]]=A[M.labels[i]]||[]).push(unflat(s))});
+  for(const l in A){
+    tpl[l]={m:{},t:{},avgLm:[],bounds:{},fingState:{}};
+    for(const f in FING){
+      const xs=A[l].map(p=>ext(p,f)),m=xs.reduce((a,b)=>a+b)/xs.length,sd=Math.sqrt(xs.reduce((a,b)=>a+(b-m)**2,0)/xs.length);
+      tpl[l].m[f]=m;
+      tpl[l].t[f]=Math.max(.3,1.8*sd);
+
+      // Target state description for each finger
+      if (f === 'thumb') {
+        tpl[l].fingState[f] = m > 0.48 
+          ? { state: 'open', label: 'Open Out 👉', short: 'Open 👉', icon: '👉' }
+          : (m < 0.35 
+            ? { state: 'tuck', label: 'Tuck In 👈', short: 'Tuck 👈', icon: '👈' }
+            : { state: 'rest', label: 'Resting 👍', short: 'Rest 👍', icon: '👍' });
+      } else {
+        tpl[l].fingState[f] = m > 1.42 
+          ? { state: 'up', label: 'Straight ⬆️', short: 'Straight ⬆️', icon: '⬆️' }
+          : (m < 1.15 
+            ? { state: 'curled', label: 'Curled ✊', short: 'Curled ✊', icon: '✊' }
+            : { state: 'bent', label: 'Bent/Hook 🤏', short: 'Bent 🤏', icon: '🤏' });
+      }
+    }
+
+    // Align all mirrored/flipped samples to canonical right-hand orientation
+    // Ground truth: Thumb MCP (point 2) is to the right (+x) of Pinky MCP (point 17)
+    const pts = A[l];
+    const aligned = pts.map(s => {
+      return (s[2][0] < s[17][0]) ? s.map(p => [-p[0], p[1], p[2]]) : s;
+    });
+
+    const n = aligned.length;
+    const avg = Array.from({length:21}, (_, ptIdx) => [
+      aligned.reduce((sum, s) => sum + s[ptIdx][0], 0) / n,
+      aligned.reduce((sum, s) => sum + s[ptIdx][1], 0) / n,
+      aligned.reduce((sum, s) => sum + s[ptIdx][2], 0) / n
+    ]);
+
+    const xs = avg.map(p => p[0]);
+    const ys = avg.map(p => p[1]);
+    const minX = Math.min(...xs), maxX = Math.max(...xs);
+    const minY = Math.min(...ys), maxY = Math.max(...ys);
+
+    tpl[l].avgLm = avg;
+    tpl[l].bounds = {
+      minX, maxX, minY, maxY,
+      midX: (minX + maxX) / 2,
+      midY: (minY + maxY) / 2,
+      spanX: Math.max(0.45, maxX - minX),
+      spanY: Math.max(0.85, maxY - minY),
+      isDown: (avg[8][1] > avg[0][1]) // downward signs (P, Q)
+    };
+  }
+}
+
+/* Draw the high-visibility Ghost Hand with distinct colors, badges, and curled posture */
+function drawGhost(x, sign, c, userLm, isMatched, wr = []) {
+  if (!tpl[sign] || !tpl[sign].avgLm) return;
+  const avg = tpl[sign].avgLm;
+  const b = tpl[sign].bounds;
+  const fState = tpl[sign].fingState || {};
+
+  let flipX = -1;
+  let G;
+
+  if (ghostMode === 'follow' && userLm && userLm[0] && userLm[9]) {
+    // AR Hologram Follow Mode: Anchored to user's wrist with true rotation and scale
+    const uWx = (1 - userLm[0].x) * c.width;
+    const uWy = userLm[0].y * c.height;
+    const uMx = (1 - userLm[9].x) * c.width;
+    const uMy = userLm[9].y * c.height;
+
+    const uAngle = Math.atan2(uMy - uWy, uMx - uWx);
+    const uScale = Math.hypot(uMx - uWx, uMy - uWy) || (c.height * 0.28);
+
+    const userThumbX = (1 - userLm[2].x) * c.width;
+    const userPinkyX = (1 - userLm[17].x) * c.width;
+    const rawFlip = userThumbX < userPinkyX ? -1 : 1;
+
+    // Canonical template middle MCP vector
+    const tMx = avg[9][0] * rawFlip;
+    const tMy = avg[9][1];
+    const tAngle = Math.atan2(tMy, tMx);
+    const deltaAngle = uAngle - tAngle;
+
+    if (!smoothAnchor) {
+      smoothAnchor = { wx: uWx, wy: uWy, scale: uScale, angle: deltaAngle, flip: rawFlip };
+    } else {
+      smoothAnchor.wx += (uWx - smoothAnchor.wx) * 0.28;
+      smoothAnchor.wy += (uWy - smoothAnchor.wy) * 0.28;
+      smoothAnchor.scale += (uScale - smoothAnchor.scale) * 0.28;
+      let dAng = deltaAngle - smoothAnchor.angle;
+      while (dAng < -Math.PI) dAng += Math.PI * 2;
+      while (dAng > Math.PI) dAng -= Math.PI * 2;
+      smoothAnchor.angle += dAng * 0.28;
+      smoothAnchor.flip = rawFlip;
+    }
+
+    const cosA = Math.cos(smoothAnchor.angle);
+    const sinA = Math.sin(smoothAnchor.angle);
+
+    G = avg.map(pt => {
+      const rx = pt[0] * smoothAnchor.flip * smoothAnchor.scale;
+      const ry = pt[1] * smoothAnchor.scale;
+      return {
+        x: smoothAnchor.wx + (rx * cosA - ry * sinA),
+        y: smoothAnchor.wy + (rx * sinA + ry * cosA),
+        z: pt[2]
+      };
+    });
+  } else {
+    // Guide Box Stencil Mode: Centered and scaled inside the guide box
+    smoothAnchor = null;
+    const gw = c.width * 0.62;
+    const gh = c.height * 0.78;
+    const gCenterX = c.width * 0.50;
+    const gCenterY = c.height * 0.50;
+
+    const xs = avg.map(p => p[0] * flipX);
+    const ys = avg.map(p => p[1]);
+    const minX = Math.min(...xs), maxX = Math.max(...xs);
+    const minY = Math.min(...ys), maxY = Math.max(...ys);
+    const spanX = Math.max(0.45, maxX - minX);
+    const spanY = Math.max(0.85, maxY - minY);
+
+    const scale = Math.min((gw * 0.72) / spanX, (gh * 0.74) / spanY);
+    const midX = (minX + maxX) / 2;
+    const midY = (minY + maxY) / 2;
+
+    G = avg.map((_, i) => ({
+      x: gCenterX + (xs[i] - midX) * scale,
+      y: gCenterY + (ys[i] - midY) * scale,
+      z: avg[i][2]
+    }));
+  }
+
+  lastGhostPoints = G;
+
+  x.save();
+  x.globalAlpha = 0.25;
+
+  // 1. Translucent palm webbing
+  x.beginPath();
+  [[0,1],[1,2],[2,5],[5,9],[9,13],[13,17],[17,0]].forEach(([p1, p2], idx) => {
+    if (idx === 0) x.moveTo(G[p1].x, G[p1].y);
+    else x.lineTo(G[p2].x, G[p2].y);
+  });
+  x.closePath();
+  x.fillStyle = isMatched ? "rgba(34, 197, 94, 0.28)" : "rgba(15, 118, 110, 0.22)";
+  x.fill();
+
+  // 2. Thick Fleshy Finger Capsules (silhouette body)
+  x.lineCap = "round";
+  x.lineJoin = "round";
+  x.lineWidth = 18;
+  for (const f in FING) {
+    const isOk = isMatched || (userLm && !wr.includes(f));
+    const col = isOk ? "rgba(34, 197, 94, 0.24)" : (FING_COLS[f] ? FING_COLS[f].bone + "25" : "rgba(45, 212, 191, 0.16)");
+    x.strokeStyle = col;
+    const ids = FING[f];
+    x.beginPath();
+    ids.forEach((id, k) => k ? x.lineTo(G[id].x, G[id].y) : x.moveTo(G[id].x, G[id].y));
+    x.stroke();
+  }
+
+  // 3. Palm base skeleton connections
+  x.lineWidth = 3;
+  x.strokeStyle = isMatched ? "rgba(74, 222, 128, 0.75)" : "rgba(148, 163, 184, 0.55)";
+  x.beginPath();
+  [[0,1],[0,5],[5,9],[9,13],[13,17],[0,17]].forEach(([p1, p2]) => {
+    x.moveTo(G[p1].x, G[p1].y);
+    x.lineTo(G[p2].x, G[p2].y);
+  });
+  x.stroke();
+
+  // 4. Distinct Color-Coded Finger Bones (Thumb=Amber, Index=Emerald, Middle=Cyan, Ring=Indigo, Pinky=Rose)
+  for (const f in FING) {
+    const ids = FING[f];
+    const isOk = isMatched || (userLm && !wr.includes(f));
+    const baseCol = isOk ? "#22C55E" : (FING_COLS[f]?.bone || "#2DD4BF");
+
+    x.lineWidth = 4.2;
+    x.strokeStyle = baseCol;
+    x.setLineDash(isOk ? [] : [7, 4]);
+
+    x.beginPath();
+    ids.forEach((id, k) => k ? x.lineTo(G[id].x, G[id].y) : x.moveTo(G[id].x, G[id].y));
+    x.stroke();
+  }
+  x.setLineDash([]);
+
+  // 5. High-Visibility Fingertip Badges (T, I, M, R, P)
+  const tipMap = { 4: 'thumb', 8: 'index', 12: 'middle', 16: 'ring', 20: 'pinky' };
+  G.forEach((pt, id) => {
+    if (id in tipMap) {
+      const f = tipMap[id];
+      const isOk = isMatched || (userLm && !wr.includes(f));
+      const col = isOk ? "#22C55E" : (FING_COLS[f]?.bone || "#2DD4BF");
+      const initial = FING_COLS[f]?.text || f[0].toUpperCase();
+
+      // Outer target glow ring
+      x.beginPath();
+      x.arc(pt.x, pt.y, 13, 0, Math.PI * 2);
+      x.fillStyle = col + "35";
+      x.fill();
+      x.lineWidth = 2.2;
+      x.strokeStyle = col;
+      x.stroke();
+
+      // Inner dark circular badge
+      x.beginPath();
+      x.arc(pt.x, pt.y, 9.5, 0, Math.PI * 2);
+      x.fillStyle = isOk ? "#15803D" : "#0F172A";
+      x.fill();
+
+      // Letter text (T, I, M, R, P) or checkmark
+      x.font = "800 10.5px 'Plus Jakarta Sans', system-ui, sans-serif";
+      x.fillStyle = "#FFFFFF";
+      x.textAlign = "center";
+      x.textBaseline = "middle";
+      x.fillText(isOk ? "✓" : initial, pt.x, pt.y + 0.5);
+    } else {
+      // Joint node
+      x.beginPath();
+      x.arc(pt.x, pt.y, 3, 0, Math.PI * 2);
+      x.fillStyle = "#FFFFFF";
+      x.fill();
+      x.lineWidth = 1.2;
+      x.strokeStyle = "rgba(15, 23, 42, 0.7)";
+      x.stroke();
+    }
+  });
+
+  x.restore();
+}
+
+/* Directional guidance: On-finger corrective cues for only the single worst finger */
+function drawDirectionalHints(x, userLm, wr, c, sign, tLm, diffs) {
+  if (!userLm || !wr || wr.length === 0) return;
+  const X = q => (1 - q.x) * c.width;
+  const Y = q => q.y * c.height;
+  const pNorm = norm(userLm);
+  const f = wr[0];
+  if (!f) return;
+
+  const ids = FING[f];
+  const tipId = ids[3];
+  const pipId = ids[1];
+  const mcpId = ids[0];
+  if (!userLm[tipId] || !userLm[mcpId]) return;
+
+  const ux = X(userLm[tipId]);
+  const uy = Y(userLm[tipId]);
+  const px = X(userLm[pipId] || userLm[mcpId]);
+  const py = Y(userLm[pipId] || userLm[mcpId]);
+  const wx = X(userLm[0]);
+  const wy = Y(userLm[0]);
+
+  // Extension difference: positive means user finger is more open/straight than target
+  const d = (diffs && diffs[f] !== undefined)
+    ? diffs[f]
+    : (tLm ? (ext(pNorm, f) - ext(tLm, f)) : (ext(pNorm, f) - (tpl[sign]?.m[f] || 0)));
+
+  x.save();
+  if (f === "thumb") {
+    // If d > 0, thumb is extended outward more than target -> need to TUCK inward
+    const isTuck = d > 0;
+    const hintMsg = isTuck ? "← Tuck" : "→ Open";
+    const ix5 = X(userLm[5]), iy5 = Y(userLm[5]);
+    let vx = ix5 - ux, vy = iy5 - uy;
+    let len = Math.hypot(vx, vy) || 1;
+    vx /= len; vy /= len;
+    if (!isTuck) { vx = -vx; vy = -vy; }
+
+    const targetX = ux + vx * 36;
+    const targetY = uy + vy * 36;
+    drawGuidanceArrow(x, ux, uy, targetX, targetY, "#F59E0B", hintMsg);
+  } else {
+    // If d < 0, finger is more curled than target -> need to STRAIGHTEN upward
+    const isTooCurled = d < 0;
+    if (isTooCurled) {
+      let vx = ux - px, vy = uy - py;
+      let len = Math.hypot(vx, vy);
+      if (len < 5) {
+        vx = ux - wx; vy = uy - wy;
+        len = Math.hypot(vx, vy) || 1;
+      }
+      vx /= len; vy /= len;
+
+      const targetX = ux + vx * 40;
+      const targetY = uy + vy * 40;
+      drawGuidanceArrow(x, ux, uy, targetX, targetY, "#38BDF8", "↑ Straighten");
+    } else {
+      const targetX = ux + (wx - ux) * 0.40;
+      const targetY = uy + (wy - uy) * 0.40;
+      drawCurlingArrow(x, ux, uy, px, py, targetX, targetY, "#F59E0B", "↓ Curl");
+    }
+  }
+  x.restore();
+}
+
+function drawGuidanceArrow(x, x1, y1, x2, y2, col, label) {
+  x.beginPath();
+  x.moveTo(x1, y1);
+  x.lineTo(x2, y2);
+  x.strokeStyle = col;
+  x.lineWidth = 3;
+  x.stroke();
+
+  const ang = Math.atan2(y2 - y1, x2 - x1);
+  x.beginPath();
+  x.moveTo(x2, y2);
+  x.lineTo(x2 - 10 * Math.cos(ang - Math.PI / 6), y2 - 10 * Math.sin(ang - Math.PI / 6));
+  x.lineTo(x2 - 10 * Math.cos(ang + Math.PI / 6), y2 - 10 * Math.sin(ang + Math.PI / 6));
+  x.closePath();
+  x.fillStyle = col;
+  x.fill();
+
+  const mx = (x1 + x2) / 2;
+  const my = (y1 + y2) / 2 - 14;
+  drawCanvasBadge(x, label, mx, my, "rgba(15, 23, 42, 0.92)", col, "#FFFFFF", 11);
+}
+
+function drawCurlingArrow(x, x1, y1, px, py, x2, y2, col, label) {
+  const cx = (x1 + x2) / 2 + (py - y1) * 0.3;
+  const cy = (y1 + y2) / 2 - (px - x1) * 0.3;
+
+  x.beginPath();
+  x.moveTo(x1, y1);
+  x.quadraticCurveTo(cx, cy, x2, y2);
+  x.strokeStyle = col;
+  x.lineWidth = 3;
+  x.stroke();
+
+  const ang = Math.atan2(y2 - cy, x2 - cx);
+  x.beginPath();
+  x.moveTo(x2, y2);
+  x.lineTo(x2 - 9 * Math.cos(ang - Math.PI / 6), y2 - 9 * Math.sin(ang - Math.PI / 6));
+  x.lineTo(x2 - 9 * Math.cos(ang + Math.PI / 6), y2 - 9 * Math.sin(ang + Math.PI / 6));
+  x.closePath();
+  x.fillStyle = col;
+  x.fill();
+
+  drawCanvasBadge(x, label, cx, cy - 14, "rgba(15, 23, 42, 0.92)", col, "#FFFFFF", 11);
+}
+
+
+/* Draw auto-centered reference skeleton inside the right target card */
+function drawRefCanvas(sign) {
+  const rc = $("#ref-cv");
+  if (!rc || !tpl[sign] || !tpl[sign].avgLm) return;
+  const rx = rc.getContext("2d");
+
+  // Set internal resolution for crisp retina rendering
+  const rect = rc.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const targetW = Math.round((rect.width || 340) * dpr);
+  const targetH = Math.round((rect.height || 220) * dpr);
+  if (rc.width !== targetW || rc.height !== targetH) {
+    rc.width = targetW;
+    rc.height = targetH;
+  }
+  rx.clearRect(0, 0, rc.width, rc.height);
+
+  const avg = tpl[sign].avgLm;
+  const b = tpl[sign].bounds;
+
+  // In mirrored view, thumb is to the user's left (negated canonical +x)
+  const flip = refMirror ? -1 : 1;
+  const xs = avg.map(p => p[0] * flip);
+  const ys = avg.map(p => p[1]);
+  const minX = Math.min(...xs), maxX = Math.max(...xs);
+  const minY = Math.min(...ys), maxY = Math.max(...ys);
+  
+  // Tightly fitted scaling to maximize pose size without clipping
+  const spanX = Math.max(0.40, (maxX - minX) * 1.08);
+  const spanY = Math.max(0.68, (maxY - minY) * 1.08);
+
+  const padTop = 16 * dpr;
+  const padBottom = 30 * dpr;
+  const padSide = 22 * dpr;
+  const availW = rc.width - padSide * 2;
+  const availH = rc.height - padTop - padBottom;
+  const scale = Math.min(availW / spanX, availH / spanY);
+
+  const midX = (minX + maxX) / 2;
+  const midY = (minY + maxY) / 2;
+  const cx = rc.width / 2;
+  const cy = padTop + availH / 2;
+
+  const G = avg.map((_, i) => ({
+    x: cx + (xs[i] - midX) * scale,
+    y: cy + (ys[i] - midY) * scale
+  }));
+
+  // Update orientation badge (only show if downward sign to avoid duplicate Mirrored chip)
+  const orientBadge = $("#ref-orient-badge");
+  if (orientBadge) {
+    if (b.isDown) {
+      orientBadge.style.display = "inline-flex";
+      orientBadge.textContent = "Point Down 👇";
+    } else {
+      orientBadge.style.display = "none";
+    }
+  }
+
+  rx.save();
+
+  // 1. Draw subtle palm & finger capsule silhouette (fleshy hand form)
+  rx.beginPath();
+  [[0,1],[1,2],[2,5],[5,9],[9,13],[13,17],[17,0]].forEach(([p1, p2], idx) => {
+    if (idx === 0) rx.moveTo(G[p1].x, G[p1].y);
+    else rx.lineTo(G[p2].x, G[p2].y);
+  });
+  rx.closePath();
+  rx.fillStyle = "rgba(45, 212, 191, 0.12)";
+  rx.fill();
+
+  // Subtle curved base under wrist / thumb base for anatomical completeness
+  rx.beginPath();
+  rx.moveTo(G[17].x, G[17].y);
+  rx.quadraticCurveTo(G[0].x, G[0].y + 12 * dpr, G[1].x, G[1].y);
+  rx.fillStyle = "rgba(45, 212, 191, 0.12)";
+  rx.fill();
+
+  // Thick soft finger capsules
+  rx.lineCap = "round";
+  rx.lineJoin = "round";
+  rx.lineWidth = Math.max(16 * dpr, scale * 0.22);
+  rx.strokeStyle = "rgba(255, 255, 255, 0.06)";
+  for (const f in FING) {
+    const ids = FING[f];
+    rx.beginPath();
+    ids.forEach((id, k) => k ? rx.lineTo(G[id].x, G[id].y) : rx.moveTo(G[id].x, G[id].y));
+    rx.stroke();
+  }
+
+  // 2. Draw palm bone connections
+  rx.lineWidth = 3.5 * dpr;
+  rx.strokeStyle = "rgba(148, 163, 184, 0.65)";
+  rx.beginPath();
+  [[0,1],[0,5],[5,9],[9,13],[13,17],[0,17]].forEach(([p1, p2]) => {
+    rx.moveTo(G[p1].x, G[p1].y);
+    rx.lineTo(G[p2].x, G[p2].y);
+  });
+  rx.stroke();
+
+  // 3. Draw finger bones with distinct colors
+  for (const f in FING) {
+    const ids = FING[f];
+    const col = FING_COLS[f];
+    rx.lineWidth = 4 * dpr;
+    rx.strokeStyle = col.bone;
+    rx.beginPath();
+    ids.forEach((id, k) => k ? rx.lineTo(G[id].x, G[id].y) : rx.moveTo(G[id].x, G[id].y));
+    rx.stroke();
+  }
+
+  // 4. Draw joints & fingertip badges
+  const tipMap = { 4: 'thumb', 8: 'index', 12: 'middle', 16: 'ring', 20: 'pinky' };
+  G.forEach((pt, id) => {
+    if (id in tipMap) {
+      const fName = tipMap[id];
+      const col = FING_COLS[fName];
+      const r = 11 * dpr;
+
+      // Glow halo
+      rx.beginPath();
+      rx.arc(pt.x, pt.y, r + 3.5 * dpr, 0, Math.PI * 2);
+      rx.fillStyle = col.bone + "33";
+      rx.fill();
+
+      // Outer badge circle
+      rx.beginPath();
+      rx.arc(pt.x, pt.y, r, 0, Math.PI * 2);
+      rx.fillStyle = "#0F172A";
+      rx.fill();
+      rx.lineWidth = 2 * dpr;
+      rx.strokeStyle = col.bone;
+      rx.stroke();
+
+      // Letter text
+      rx.font = `800 ${11 * dpr}px 'Plus Jakarta Sans', system-ui, sans-serif`;
+      rx.textAlign = "center";
+      rx.textBaseline = "middle";
+      rx.fillStyle = "#FFFFFF";
+      rx.fillText(col.text, pt.x, pt.y + 0.5 * dpr);
+    } else {
+      // Joint dot
+      rx.beginPath();
+      rx.arc(pt.x, pt.y, (id === 0 ? 4.5 : 3.5) * dpr, 0, Math.PI * 2);
+      rx.fillStyle = "#FFFFFF";
+      rx.fill();
+      rx.lineWidth = 1.5 * dpr;
+      rx.strokeStyle = id === 0 ? "#94A3B8" : "#0D9488";
+      rx.stroke();
+    }
+  });
+
+  rx.restore();
+}
+
+/* "Show me" Ghost Toggle (about 25% opacity, hidden while signing unless tapped) */
+let showMeActive = false;
+const showMeBtn = $("#show-me-btn");
+
+function updateShowMe(active) {
+  showMeActive = active;
+  if (showMeBtn) {
+    showMeBtn.classList.toggle("active", showMeActive);
+    showMeBtn.innerHTML = showMeActive ? '👻 Hide ghost' : '👁️ Show me';
+  }
+  const tag = $("#ghost-tag");
+  if (tag) {
+    if (showMeActive) {
+      tag.style.display = "inline-flex";
+      tag.textContent = "👻 Ghost (25%)";
+    } else if (!run || !present) {
+      tag.style.display = "inline-flex";
+      tag.textContent = "👻 Ghost: Stencil";
+    } else {
+      tag.style.display = "none";
+    }
+  }
+  // Redraw idle canvas if camera is off
+  if (!run && $("#cv") && cl[cur]) {
+    const c = $("#cv"), x = c.getContext("2d");
+    c.width = 640; c.height = 480;
+    x.clearRect(0, 0, c.width, c.height);
+    drawGhost(x, cl[cur], c, null, false, []);
+  }
+}
+
+if (showMeBtn) {
+  showMeBtn.onclick = () => {
+    updateShowMe(!showMeActive);
+  };
+}
+
+/* Mirror / Frontal View Switcher for Target Pose Card */
+const mirrorBtn = $("#ref-mirror-btn");
+if (mirrorBtn) {
+  mirrorBtn.onclick = (e) => {
+    e.stopPropagation();
+    refMirror = !refMirror;
+    mirrorBtn.textContent = refMirror ? "🪞 Mirrored View" : "🧑 Teacher View";
+    mirrorBtn.classList.toggle("active", refMirror);
+    if (cl[cur]) drawRefCanvas(cl[cur]);
+  };
+}
+
+const refBox = $("#ref-box");
+if (refBox) {
+  refBox.addEventListener("toggle", () => {
+    if (refBox.open && cl[cur]) {
+      requestAnimationFrame(() => drawRefCanvas(cl[cur]));
+    }
+  });
+}
+
+window.addEventListener('resize', () => {
+  if (cl[cur]) drawRefCanvas(cl[cur]);
+});
+
+/* screens */
+function show(t){$$("main section").forEach(s=>s.hidden=s.id!==t);$$("nav button").forEach(b=>b.setAttribute("aria-selected",b.dataset.t===t));
+ if(t==="learn")renderLearn();if(t==="progress")renderProg()}
+$$("nav button").forEach(b=>b.onclick=()=>show(b.dataset.t));
+function renderLearn(){let h="";for(let i=0;i<cl.length;i+=5){const g=cl.slice(i,i+5),m=g.filter(s=>state(s)==="mastered").length;
+ h+=`<div class="level"><div class="lh"><h2>Level ${i/5+1} · ${g[0]} to ${g[g.length-1]}</h2><span>${m} of ${g.length} signs mastered</span></div><div class="chips">${g.map((s,j)=>`<button class="chip ${state(s)}" data-i="${i+j}">${s}</button>`).join("")}</div></div>`}
+ $("#levels").innerHTML=h;$$(".chip").forEach(c=>c.onclick=()=>{setSign(+c.dataset.i);show("practice")});$("#stk").textContent=S.streak||0}
+function renderProg(){const ks=cl.filter(s=>P[s]&&P[s].a),A=ks.reduce((a,s)=>a+P[s].a,0),C=ks.reduce((a,s)=>a+P[s].c,0),w=[...ks].sort((a,b)=>acc(a)-acc(b));
+ $("#s1").textContent=cl.filter(s=>state(s)==="mastered").length;$("#s2").textContent=A?Math.round(100*C/A)+"%":"–";$("#s3").textContent=(S.streak||0)+" days";$("#s4").textContent=w.slice(0,2).join(", ")||"–";
+ $("#bars").innerHTML=w.slice(0,8).map(s=>{const a=Math.round(100*acc(s));return `<div class="br${a<60?" low":""}"><span>${s}</span><div><i style="width:${a}%"></i></div><small>${a}%</small></div>`}).join("")||"<span style='color:var(--muted)'>Practise a few signs and your accuracy will appear here.</span>"}
+$("#cont").onclick=()=>{const i=cl.findIndex(s=>state(s)!=="mastered");setSign(i<0?0:i);show("practice")};
+$("#skip").onclick=()=>setSign(cur+1);
+
+let coachLoading = false;
+let lastCoachCall = 0;
+let errorStartTime = 0;
+let aiTipExpiry = 0;
+let lastWr = [];
+let lastLab = {};
+let lastPred = "";
+
+function setSign(i){
+  cur=((i%cl.length)+cl.length)%cl.length;done=false;hs=0;present=false;gone=0;ring(0);
+  updateShowMe(false);
+  errorStartTime = 0;
+  aiTipExpiry = 0;
+  coachLoading = false;
+  lastWr = [];
+  lastLab = {};
+  lastPred = "";
+  const s = cl[cur];
+  $("#tl").textContent=s;
+  $("#th").textContent="Sign: "+s;
+  $("#tsub").textContent=`Sign ${cur+1} of ${cl.length}`;
+  $("#tcue").textContent=CUES[s] || '☝️ Match the ghost silhouette on screen';
+  const badge = $("#coach-ai-badge");
+  if (badge) { badge.textContent = "✨ AI Active"; badge.className = "coach-ai-badge"; }
+  drawRefCanvas(s);
+  ui("Show your hand in the box",null,"Place your hand in the box and match the ghost outline.",true);
+
+  // If camera is not running, show ghost hand in center of stage canvas
+  if (!run && $("#cv")) {
+    const c = $("#cv"), x = c.getContext("2d");
+    c.width = 640; c.height = 480;
+    x.clearRect(0, 0, c.width, c.height);
+    drawGhost(x, s, c, null, false, []);
+  }
+}
+
+const ring=q=>$("#ring").style.strokeDashoffset=113*(1-Math.min(1,q));
+function ui(stat,lab,tip,force,isOk=false){
+  $("#stat").textContent=stat;
+  const key=JSON.stringify(lab)+"_"+isOk;
+  if(key!==lastKey||force){
+    lastKey=key;
+    const fKeys = Object.keys(FING);
+    const overallBadge = $("#fc-overall-status");
+    const issuesContainer = $("#fc-issues");
+
+    if(!lab){
+      fKeys.forEach(f => {
+        const dot = $(`#fcdot-${f}`);
+        if(dot) dot.className = "fc-dot na";
+      });
+      if(overallBadge){
+        overallBadge.textContent = "Ready";
+        overallBadge.className = "fc-status-badge";
+      }
+      if(issuesContainer){
+        issuesContainer.style.display = "none";
+        issuesContainer.innerHTML = "";
+      }
+    } else {
+      const wrong = fKeys.filter(f => lab[f]);
+      fKeys.forEach(f => {
+        const dot = $(`#fcdot-${f}`);
+        if(dot){
+          dot.className = lab[f] ? "fc-dot bad" : "fc-dot ok";
+        }
+      });
+
+      // CRITICAL: NEVER show "All match ✓" unless the classifier explicitly agrees (isOk === true)!
+      if(isOk && wrong.length === 0){
+        if(overallBadge){
+          overallBadge.textContent = "All match ✓";
+          overallBadge.className = "fc-status-badge ok";
+        }
+        if(issuesContainer){
+          issuesContainer.style.display = "none";
+          issuesContainer.innerHTML = "";
+        }
+      } else {
+        const issueCount = wrong.length || 1;
+        if(overallBadge){
+          overallBadge.textContent = `${issueCount} to adjust`;
+          overallBadge.className = "fc-status-badge bad";
+        }
+        if(issuesContainer){
+          issuesContainer.style.display = "flex";
+          const worst = wrong[0];
+          const raw = lab[worst] || "Adjust posture";
+          const col = FING_COLS[worst]?.bone || "#EF4444";
+          const shortHint = raw === "Too curled" ? "↑ Straighten" :
+                            raw === "Too straight" ? "↓ Curl" :
+                            raw === "Tuck in" ? "← Tuck" :
+                            raw === "Open out" ? "→ Open" :
+                            raw === "Bring closer" ? "→ Together" : raw;
+          issuesContainer.innerHTML = `<div class="fc-issue-item">
+            <span class="fc-issue-finger"><i class="fl-dot" style="background:${col}"></i>${NAME[worst]}</span>
+            <span class="fc-issue-tag">${shortHint}</span>
+          </div>` + (wrong.length > 1 ? `<span class="fc-more-count">+${wrong.length - 1} more</span>` : "");
+        }
+      }
+    }
+  }
+  if(tip && force){
+    $("#tip").textContent=tip;
+  }
+}
+
+async function coach(sign, errs = [], pred = ""){
+  if(!COACH_URL || coachLoading) return;
+  coachLoading = true;
+  lastCoachCall = performance.now();
+
+  const avatar = $("#coach-avatar");
+  const badge = $("#coach-ai-badge");
+  const tipEl = $("#tip");
+
+  if(avatar) avatar.classList.add("thinking");
+  if(badge){
+    badge.textContent = "Thinking… ✨";
+    badge.className = "coach-ai-badge loading";
+  }
+  if(tipEl){
+    tipEl.textContent = "Cikgu AI is reviewing your hand pose… ✨";
+  }
+
+  try {
+    const r = await fetch(COACH_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sign,
+        cue: CUES[sign] || "",
+        errors: errs,
+        predicted: pred || "",
+        lang: "en"
+      })
+    });
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    const j = await r.json();
+    if(j.tip){
+      aiTipExpiry = performance.now() + 8500;
+      if(tipEl) tipEl.textContent = j.tip;
+      if(badge){
+        badge.textContent = "✨ Cikgu AI";
+        badge.className = "coach-ai-badge fresh";
+        setTimeout(() => { if(badge) badge.className = "coach-ai-badge"; }, 3000);
+      }
+    } else {
+      throw new Error(j.error || "Empty reply");
+    }
+  } catch(e) {
+    console.warn("Cikgu AI fetch error:", e);
+    if(badge){
+      badge.textContent = "✨ AI Ready";
+      badge.className = "coach-ai-badge";
+    }
+    if(tipEl && tipEl.textContent.includes("reviewing your hand")){
+      tipEl.textContent = "Cikgu AI is ready. Adjust your posture or tap '✨ Ask Cikgu'.";
+    }
+  } finally {
+    coachLoading = false;
+    if(avatar) avatar.classList.remove("thinking");
+  }
+}
+
+// Interactive "Ask Cikgu" button trigger
+const askCoachBtn = $("#ask-coach-btn");
+if(askCoachBtn){
+  askCoachBtn.onclick = (e) => {
+    e.stopPropagation();
+    const s = cl[cur] || 'A';
+    let errPayload = [];
+    if(lastWr && lastWr.length > 0 && lastLab){
+      const primaryWorst = lastWr[0];
+      errPayload = [{ finger: NAME[primaryWorst], issue: lastLab[primaryWorst] || "Needs adjustment" }];
+    }
+    coach(s, errPayload, lastPred || "");
+  };
+}
+
+/* camera loop */
+function draw(x, lm, wr, c) {
+  const X = q => (1 - q.x) * c.width, Y = q => q.y * c.height;
+  x.lineWidth = 5;
+  x.lineCap = x.lineJoin = "round";
+
+  // Palm base lines
+  x.strokeStyle = "rgba(255,255,255,.45)";
+  x.beginPath();
+  [[0,1],[0,5],[5,9],[9,13],[13,17],[0,17]].forEach(([a,b]) => {
+    x.moveTo(X(lm[a]), Y(lm[a]));
+    x.lineTo(X(lm[b]), Y(lm[b]));
+  });
+  x.stroke();
+
+  // Finger bones & joints
+  for (const f in FING) {
+    const isBad = wr.includes(f);
+    const col = isBad ? "#EF4444" : "#22C55E";
+    const ids = FING[f];
+    x.strokeStyle = col;
+    x.beginPath();
+    ids.forEach((id, k) => k ? x.lineTo(X(lm[id]), Y(lm[id])) : x.moveTo(X(lm[id]), Y(lm[id])));
+    x.stroke();
+
+    ids.forEach(id => {
+      x.beginPath();
+      x.arc(X(lm[id]), Y(lm[id]), 4.5, 0, Math.PI * 2);
+      x.fillStyle = "#FFFFFF";
+      x.fill();
+      x.lineWidth = 2;
+      x.strokeStyle = col;
+      x.stroke();
+    });
+
+    // Fingertip user badge with letter initial
+    const tipId = ids[3];
+    const initial = FING_COLS[f]?.text || f[0].toUpperCase();
+    x.beginPath();
+    x.arc(X(lm[tipId]), Y(lm[tipId]), 8.5, 0, Math.PI * 2);
+    x.fillStyle = isBad ? "#991B1B" : "#166534";
+    x.fill();
+    x.strokeStyle = isBad ? "#FCA5A5" : "#86EFAC";
+    x.lineWidth = 1.6;
+    x.stroke();
+
+    x.font = "800 9px 'Plus Jakarta Sans', system-ui, sans-serif";
+    x.fillStyle = "#FFFFFF";
+    x.textAlign = "center";
+    x.textBaseline = "middle";
+    x.fillText(isBad ? "!" : initial, X(lm[tipId]), Y(lm[tipId]) + 0.5);
+  }
+}
+
+function win(){const s=cl[cur];done=true;(P[s]=P[s]||{a:1,c:0}).c++;
+ const d=new Date().toDateString(),y=new Date(Date.now()-864e5).toDateString();if(S.last!==d){S.streak=S.last===y?(S.streak||0)+1:1;S.last=d;$("#stk").textContent=S.streak}
+ save();ui(`${s} learned!`,{},"Nice work! Moving on to the next sign…",true,true);setTimeout(()=>{if(done)setSign(cur+1)},1800)}
+
+function frame(lm){
+  const c=$("#cv"),x=c.getContext("2d"),now=performance.now();
+  c.width=cam.videoWidth;c.height=cam.videoHeight;
+  const s=cl[cur];
+
+  // If no hand in view, draw static ghost stencil in the center of the guide box
+  if(!lm){
+    hs=0;if(!gone)gone=now;if(now-gone>1000)present=false;
+    if(!done){ring(0);$("#guide-box")?.classList.remove('locked');ui("Show your hand in the box",null,"Place your hand in the box and match the ghost outline.",false,false)}
+    x.clearRect(0,0,c.width,c.height);
+    drawGhost(x,s,c,null,false,[]);
+    const tag = $("#ghost-tag");
+    if (tag) { tag.style.display = "inline-flex"; tag.textContent = "👻 Ghost: Stencil"; }
+    return;
+  }
+
+  gone=0;
+  if(!present&&!done){present=true;(P[s]=P[s]||{a:0,c:0}).a++;save()}
+  const p=norm(lm);
+  const [pred,share]=knn(p.flat());
+  const ok=(pred===s && share>.5);
+  const lab={},wr=[];
+  const tLm = getNearestTargetSample(s, p.flat());
+  const evalResult = evaluateFingersAgainstTarget(p, tLm, s);
+  const { errors, labels, diffs } = evalResult;
+
+  // Identify worst finger against the nearest real target sample
+  const sortedFingers = Object.keys(FING).sort((a,b)=>errors[b]-errors[a]);
+  const worstFinger = sortedFingers[0];
+
+  if(!ok){
+    // Flag any fingers that deviate noticeably from target sample
+    for(const f in FING){
+      if(errors[f]>0.38){
+        wr.push(f);
+        lab[f]=labels[f];
+      }
+    }
+    // When the sign is wrong, ALWAYS flag the worst finger!
+    if(wr.length===0 || !wr.includes(worstFinger)){
+      if(!wr.includes(worstFinger)) wr.unshift(worstFinger);
+      lab[worstFinger]=labels[worstFinger];
+    }
+  }
+
+  x.clearRect(0,0,c.width,c.height);
+
+  const tag = $("#ghost-tag");
+  if (showMeActive) {
+    // 1. User tapped "Show me": Show ONLY the Ghost Hand at ~25% opacity (no skeleton, no arrows)
+    drawGhost(x, s, c, null, false, []);
+    if (tag) { tag.style.display = "inline-flex"; tag.textContent = "👻 Ghost (25%)"; }
+  } else {
+    // 2. Normal signing: Show ONLY User Skeleton + single Arrow hint (NEVER together with ghost!)
+    if (tag) { tag.style.display = "none"; }
+    draw(x, lm, wr, c);
+    if (!ok && wr.length > 0) {
+      drawDirectionalHints(x, lm, wr, c, s, tLm, diffs);
+    }
+  }
+
+  if(done)return;
+  if(ok){
+    $("#guide-box")?.classList.add('locked');
+    errorStartTime = 0;
+    if(!hs)hs=now;
+    const q=(now-hs)/1000;
+    ring(q);
+    q>=1?win():ui("Correct! Hold it…",{},"That's it! Hold steady for one second.",false,true);
+  } else {
+    $("#guide-box")?.classList.remove('locked');
+    hs=0;ring(0);
+    const worstF = wr[0] || worstFinger;
+    const pairKey = `${s}_${pred}`;
+    lastWr = wr;
+    lastLab = lab;
+    lastPred = pred;
+
+    const statMsg = (pred && pred !== s && share >= 0.25)
+      ? `Looks like ${pred} · Adjust ${NAME[worstF].toLowerCase()}`
+      : `Not quite: check your ${NAME[worstF].toLowerCase()}`;
+
+    ui(statMsg, lab, null, false, false);
+
+    // Auto-invoke Cikgu AI with focus strictly on the single worst finger (one fix at a time)
+    if (!errorStartTime) errorStartTime = now;
+    if (worstF && !coachLoading && (now - errorStartTime >= 1500) && (now - lastCoachCall >= 6000)) {
+      const primaryErr = [{ finger: NAME[worstF], issue: lab[worstF] || "Needs adjustment" }];
+      coach(s, primaryErr, pred);
+    }
+  }
+}
+
+function loop(){if(!run)return;if(cam.currentTime!==lastT){lastT=cam.currentTime;const r=lmk.detectForVideo(cam,performance.now());frame(r.landmarks[0])}requestAnimationFrame(loop)}
+$("#start").onclick=async()=>{try{$("#cs").textContent="Loading…";
+ cam.srcObject=await navigator.mediaDevices.getUserMedia({video:{width:640,height:480}});await cam.play();
+ if(!lmk){const fs=await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"),
+  o=d=>({baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",delegate:d},runningMode:"VIDEO",numHands:1});
+  try{lmk=await HandLandmarker.createFromOptions(fs,o("GPU"))}catch(e){lmk=await HandLandmarker.createFromOptions(fs,o("CPU"))}}
+ run=true;$("#cs").textContent="Camera on";$("#start").hidden=true;$("#idle-msg").style.display="none";loop()}catch(e){$("#cs").textContent="Camera error";$("#stat").textContent=e.message}};
+
+fetch("model.json").then(r=>r.json()).then(m=>{
+  M=m;cl=m.classes;
+  buildTpl();
+  renderLearn();
+  setSign(0);
+}).catch(()=>{$("#levels").innerHTML='<p class="err">Could not load model.json. Please open this page through a local HTTP server (e.g. <code>python -m http.server 8000</code>) to allow browser fetch.</p>'});
+</script>
+</body>
+</html>
